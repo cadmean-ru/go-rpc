@@ -19,6 +19,10 @@ func MakeHandler(delegate HandlerFunc) http.HandlerFunc {
 			return
 		}
 
+		writer.Header().Add("Access-Control-Allow-Origin", "*")
+		writer.Header().Add("Access-Control-Allow-Methods", "POST, OPTIONS")
+		writer.Header().Add("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+
 		defer request.Body.Close()
 		data, err := ioutil.ReadAll(request.Body)
 		if err != nil {
