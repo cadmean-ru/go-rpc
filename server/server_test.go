@@ -1,6 +1,7 @@
-package rpc
+package server
 
 import (
+	"github.com/cadmean-ru/rpc"
 	"net/http"
 	"testing"
 )
@@ -8,7 +9,7 @@ import (
 func TestHandle(t *testing.T) {
 	Handle("sum", func(args ...interface{}) (interface{}, error) {
 		if len(args) < 2 {
-			return nil, NewError(1, "Not enough arguments")
+			return nil, rpc.NewError(1, "Not enough arguments")
 		}
 
 		a := args[0].(float64)

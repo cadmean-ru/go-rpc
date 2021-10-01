@@ -22,6 +22,7 @@ func NewError(code int, msg ...string) Error {
 }
 
 const (
+	ErrorEmpty                   = 0
 	ErrorFunctionNotCallable     = -100
 	ErrorFunctionNotFound        = -101
 	ErrorIncompatibleRPCVersion  = -102
@@ -32,4 +33,5 @@ const (
 	ErrorNotSuccessfulStatusCode = -401
 	ErrorServer                  = -500
 	ErrorAuth                    = -600
+	ErrorPreCallChecks           = -700
 )
