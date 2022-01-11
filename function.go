@@ -3,12 +3,13 @@ package rpc
 import (
 	"errors"
 	"fmt"
+	"github.com/cadmean-ru/require"
 	"github.com/mitchellh/mapstructure"
 	"reflect"
 )
 
 type Function struct {
-	name string
+	name   string
 	client *Client
 }
 
@@ -42,6 +43,12 @@ func (f *Function) Call(args ...interface{}) (*FunctionOutput, error) {
 		return output, NewError(output.Error, fmt.Sprintf("function call finished with error %d", output.Error))
 	}
 
+	if resultType, ok := output.Meta["resultType"]; ok && resultType == "auth" {
+		m := require.SiMap(output.Result)
+		ticket := NewAuthTicket(require.String(m["accessToken"]), require.String(m["refreshToken"]))
+		f.client.configuration.AuthTicketHolder.SetTicket(ticket)
+	}
+
 	return output, nil
 }
 
@@ -60,8 +67,8 @@ func (f *Function) CallForResult(result interface{}, args ...interface{}) error 
 	resultType = resultType.Elem()
 	resultValue := reflect.ValueOf(result)
 	resultValue = reflect.Indirect(resultValue)
-	if resultType.Kind() == reflect.Map || resultType.Kind() == reflect.Slice {
-		err = mapstructure.Decode(output, resultValue.Interface())
+	if resultType.Kind() == reflect.Map || resultType.Kind() == reflect.Struct {
+		err = mapstructure.Decode(output.Result, result)
 		if err != nil {
 			return err
 		}
@@ -74,7 +81,7 @@ func (f *Function) CallForResult(result interface{}, args ...interface{}) error 
 
 func newFunction(name string, client *Client) *Function {
 	return &Function{
-		name: name,
+		name:   name,
 		client: client,
 	}
 }

@@ -7,7 +7,7 @@ type Client struct {
 	configuration *Configuration
 }
 
-func (c *Client) F(name string) *Function {
+func (c *Client) Func(name string) *Function {
 	return newFunction(name, c)
 }
 
