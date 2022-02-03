@@ -1,4 +1,4 @@
-module github.com/cadmean-ru/rpc
+module github.com/cadmean-ru/go-rpc
 
 go 1.15
 

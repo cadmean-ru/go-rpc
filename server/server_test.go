@@ -1,7 +1,7 @@
 package server
 
 import (
-	"github.com/cadmean-ru/rpc"
+	"github.com/cadmean-ru/go-rpc/rpc"
 	"net/http"
 	"testing"
 )
@@ -15,7 +15,7 @@ func TestHandle(t *testing.T) {
 		a := args[0].(float64)
 		b := args[1].(float64)
 
-		return a+b, nil
+		return a + b, nil
 	})
 
 	_ = http.ListenAndServe(":69", nil)
