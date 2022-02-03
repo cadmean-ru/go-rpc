@@ -14,15 +14,16 @@ type HandlerFunc func(args ...interface{}) (interface{}, error)
 
 func MakeHandler(delegate HandlerFunc) http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
+		writer.Header().Add("Access-Control-Allow-Origin", "*")
+		writer.Header().Add("Access-Control-Allow-Methods", "POST, OPTIONS")
+		writer.Header().Add("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token")
+		writer.Header().Add("Content-Type", "application/json")
+
 		v := request.Header.Get("Cadmean-RPC-Version")
 		if v != Version {
 			writeError(writer, rpc.ErrorIncompatibleRPCVersion)
 			return
 		}
-
-		writer.Header().Add("Access-Control-Allow-Origin", "*")
-		writer.Header().Add("Access-Control-Allow-Methods", "POST, OPTIONS")
-		writer.Header().Add("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 
 		defer request.Body.Close()
 		data, err := ioutil.ReadAll(request.Body)
