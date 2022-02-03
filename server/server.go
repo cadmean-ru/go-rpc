@@ -3,7 +3,7 @@ package server
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/cadmean-ru/rpc"
+	"github.com/cadmean-ru/go-rpc/rpc"
 	"io/ioutil"
 	"net/http"
 )
